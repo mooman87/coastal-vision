@@ -1,0 +1,46 @@
+services:
+  db:
+    image: postgres:16
+    container_name: coastal_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: coastaluser
+      POSTGRES_PASSWORD: coastalpass
+      POSTGRES_DB: coastaldb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - ALLOWED_ORIGINS=http://localhost:3000
+      - DATABASE_URL=postgresql://coastaluser:coastalpass@db:5432/coastaldb
+    command: sh -c "sleep 5 && uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
+    volumes:
+      - ./api:/app
+    depends_on:
+      - db
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
+    volumes:
+      - ./web:/app
+      - /app/node_modules
+    command: sh -c "npm install && npm run dev"
+    depends_on:
+      - api
+
+volumes:
+  postgres_data:

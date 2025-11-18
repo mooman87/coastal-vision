@@ -1,0 +1,18 @@
+# Node / Next
+node_modules/
+.next/
+out/
+
+# Python
+__pycache__/
+*.pyc
+.env
+.env.*
+
+# Docker
+*.log
+
+# OS/editor trash
+.DS_Store
+.idea/
+.vscode/
