@@ -38,7 +38,7 @@ app.mount("/media", StaticFiles(directory=MEDIA_DIR), name="media")
 origins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
-    "https://coastalvision.netlify.app/",
+    "https://coastalvision.netlify.app",
 ]
 
 app.add_middleware(
